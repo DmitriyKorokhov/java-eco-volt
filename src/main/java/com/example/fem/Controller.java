@@ -29,6 +29,8 @@ public class Controller {
     // Списки для хранения данных G(i) и T2m
     private final List<Double> ghiList = new ArrayList<>();
     private final List<Double> t2mList = new ArrayList<>();
+    // Переменная для хранения оптимального угла наклона
+    private double optimalSlope;
 
     @FXML
     public void initialize() {
@@ -81,7 +83,7 @@ public class Controller {
 
         // Формируем URL для запроса
         String urlAddress = String.format(
-                "https://re.jrc.ec.europa.eu/api/seriescalc?lat=%s&lon=%s&startyear=2023&endyear=2023",
+                "https://re.jrc.ec.europa.eu/api/seriescalc?lat=%s&lon=%s&optimalangles=1&startyear=2023&endyear=2023",
                 latitude, longitude
         );
 
@@ -94,6 +96,9 @@ public class Controller {
             return;
         }
 
+        // Извлекаем оптимальный угол наклона (Slope)
+        optimalSlope = dataProcessor.extractOptimalSlope(output);
+
         // Обрабатываем CSV-ответ
         dataProcessor.processData(output, ghiList, t2mList);
 
@@ -104,14 +109,15 @@ public class Controller {
         }
 
         // Сохраняем данные в текстовый файл
-        fileWriterService.saveDataToFile("output.txt", ghiList, t2mList);
+        fileWriterService.saveDataToFile("output.txt", ghiList, t2mList, optimalSlope);
 
         // Устанавливаем маркер на земном шаре
         double lat = Double.parseDouble(latitude);
         double lon = Double.parseDouble(longitude);
         globeView.setMarker(lat, lon);
 
-        // Выводим данные G(i) и T2m в консоль для проверки
+        // Выводим данные Оптимального угла наклона, G(i) и T2m в консоль для проверки
+        System.out.println("Оптимальный угол наклона (Slope): " + optimalSlope);
         System.out.println("Данные G(i): " + ghiList);
         System.out.println("Данные T2m: " + t2mList);
     }

@@ -55,4 +55,26 @@ public class DataProcessor {
             }
         }
     }
+
+    /**
+     * Извлекает значение оптимального угла наклона (Slope) из ответа API.
+     */
+    public double extractOptimalSlope(String output) {
+        // Ищем строку, содержащую "Slope:"
+        for (String line : output.split("\n")) {
+            if (line.contains("Slope:")) {
+                // Используем регулярное выражение для извлечения числа
+                String[] parts = line.split(":");
+                if (parts.length > 1) {
+                    String slopeValue = parts[1].trim().split(" ")[0]; // Берем первое слово после "Slope:"
+                    try {
+                        return Double.parseDouble(slopeValue);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Ошибка при парсинге значения Slope: " + slopeValue);
+                    }
+                }
+            }
+        }
+        return 0.0; // Возвращаем 0, если значение не найдено
+    }
 }

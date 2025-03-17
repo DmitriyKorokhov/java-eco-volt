@@ -8,10 +8,13 @@ import java.util.List;
 public class FileWriterService {
 
     /**
-     * Сохраняет данные G(i) и T2m в текстовый файл.
+     * Сохраняет данные Оптимального угла наклона (Slope), G(i) и T2m в текстовый файл
      */
-    public void saveDataToFile(String fileName, List<Double> ghiList, List<Double> t2mList) {
+    public void saveDataToFile(String fileName, List<Double> ghiList, List<Double> t2mList, double optimalSlope) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            // Записываем оптимальный угол наклона в первую строку
+            writer.write("Optimal Slope: " + optimalSlope + " deg.\n");
+
             // Записываем заголовки
             writer.write("G(i)\tT2m\n");
 
