@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.fem.Controller">
+    <padding>
+        <Insets top="20" right="50" bottom="20" left="50"/>
+    </padding>
+
+    <!-- Контейнер для земного шара -->
+    <AnchorPane fx:id="globeContainer" prefHeight="600" prefWidth="400"/>
+
+    <!-- Поле для ввода широты -->
+    <Label text="Введите широту:"/>
+    <HBox alignment="CENTER">
+        <TextField fx:id="latitudeField" promptText="Широта (например, 45)" prefWidth="200"/>
+    </HBox>
+
+    <!-- Поле для ввода долготы -->
+    <Label text="Введите долготу:"/>
+    <HBox alignment="CENTER">
+        <TextField fx:id="longitudeField" promptText="Долгота (например, 8)" prefWidth="200"/>
+    </HBox>
+
+    <!-- Кнопка для получения данных -->
+    <Button text="Получить данные" onAction="#onGetDataButtonClick"/>
+</VBox>

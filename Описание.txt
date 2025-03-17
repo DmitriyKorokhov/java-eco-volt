@@ -1,0 +1,4 @@
+У меня есть программа на JavaFX, в которой я, используя доступ к API PVGIS, беру данные солнечного излучения.
+У меня есть класс Application, в котором описан
+https://re.jrc.ec.europa.eu/api/seriescalc?lat=%s&lon=%s
+https://re.jrc.ec.europa.eu/api/DRcalc?lat=%s&lon=%s&month=3&global=1&showtemperatures=1
