@@ -1,7 +1,7 @@
 Программа EcoVolt написана на языке программирования Java с использованием JavaFX — платформа для создания приложений с
 насыщенным графическим интерфейсом, в которой я, используя доступ к API PVGIS, беру данные солнечного излучения 
 и температуры для определенной географической точки:
-"https://re.jrc.ec.europa.eu/api/seriescalc?lat=%s&lon=%s&startyear=2023&endyear=2023".
+https://re.jrc.ec.europa.eu/api/seriescalc?lat=%s&lon=%s&optimalangles=1&startyear=2023&endyear=2023.
 
 API содержит в себе запрос о часовых излучениях за год:
 1. lat - широта
