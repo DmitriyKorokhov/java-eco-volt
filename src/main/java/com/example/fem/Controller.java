@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.control.Label;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,17 @@ public class Controller {
     @FXML
     private AnchorPane globeContainer; // Контейнер для SubScene
 
+    @FXML
+    private AnchorPane histogramContainer; // Контейнер для гистограммы
+
+    @FXML
+    private Label optimalSlopeLabel; // Label для отображения оптимального угла
+
+    @FXML
+    private Label averageGhiLabel; // Label для отображения среднего значения GHI
+
     private GlobeView globeView;
+    private HistogramView histogramView;
     private final ApiClient apiClient = new ApiClient();
     private final DataProcessor dataProcessor = new DataProcessor();
     private final FileWriterService fileWriterService = new FileWriterService();
@@ -52,6 +63,10 @@ public class Controller {
 
         // Добавляем SubScene в контейнер
         globeContainer.getChildren().add(globeSubScene);
+
+        // Инициализация гистограммы
+        histogramView = new HistogramView(); // Передаем контейнер
+        histogramContainer.getChildren().add(histogramView.getBarChart()); // Добавляем гистограмму в контейнер
     }
 
     /**
@@ -87,39 +102,67 @@ public class Controller {
                 latitude, longitude
         );
 
-        // Выполняем запрос и получаем результат
-        String output = apiClient.getUrlContent(urlAddress);
+        // Создаем новый поток для выполнения HTTP-запроса
+        new Thread(() -> {
+            // Выполняем запрос и получаем результат
+            String output = apiClient.getUrlContent(urlAddress);
 
-        // Проверяем, что ответ не пустой
-        if (output == null || output.isEmpty()) {
-            showAlert("Ошибка", "Не удалось получить данные от API.");
-            return;
+            // Проверяем, что ответ не пустой
+            if (output == null || output.isEmpty()) {
+                javafx.application.Platform.runLater(() ->
+                        showAlert("Ошибка", "Не удалось получить данные от API.")
+                );
+                return;
+            }
+
+            // Извлекаем оптимальный угол наклона (Slope)
+            optimalSlope = dataProcessor.extractOptimalSlope(output);
+
+            // Обрабатываем CSV-ответ
+            dataProcessor.processData(output, ghiList, t2mList);
+
+            // Проверяем количество данных
+            if (ghiList.size() != 8760 || t2mList.size() != 8760) {
+                javafx.application.Platform.runLater(() ->
+                        showAlert("Ошибка", "Количество данных не соответствует ожидаемому (8760). Проверьте формат данных.")
+                );
+                return;
+            }
+
+            // Сохраняем данные в текстовый файл
+            fileWriterService.saveDataToFile("output.txt", ghiList, t2mList, optimalSlope);
+
+            // Устанавливаем маркер на земном шаре
+            double lat = Double.parseDouble(latitude);
+            double lon = Double.parseDouble(longitude);
+
+            // Обновляем UI в основном потоке
+            javafx.application.Platform.runLater(() -> {
+                globeView.setMarker(lat, lon);
+                histogramView.updateData(ghiList); // Обновляем гистограмму
+
+                // Обновляем значения в интерфейсе
+                optimalSlopeLabel.setText(String.format("%.2f°", optimalSlope)); // Оптимальный угол
+                averageGhiLabel.setText(String.format("%.2f", calculateAverage(ghiList))); // Среднее значение GHI
+            });
+
+            // Выводим данные Оптимального угла наклона, G(i) и T2m в консоль для проверки
+            System.out.println("Оптимальный угол наклона (Slope): " + optimalSlope);
+            System.out.println("Данные G(i): " + ghiList);
+            System.out.println("Данные T2m: " + t2mList);
+        }).start(); // Запускаем поток
+    }
+
+    /**
+     * Метод для расчета среднего значения из списка.
+     */
+    private double calculateAverage(List<Double> list) {
+        if (list.isEmpty()) return 0;
+        double sum = 0;
+        for (Double value : list) {
+            sum += value;
         }
-
-        // Извлекаем оптимальный угол наклона (Slope)
-        optimalSlope = dataProcessor.extractOptimalSlope(output);
-
-        // Обрабатываем CSV-ответ
-        dataProcessor.processData(output, ghiList, t2mList);
-
-        // Проверяем количество данных
-        if (ghiList.size() != 8760 || t2mList.size() != 8760) {
-            showAlert("Ошибка", "Количество данных не соответствует ожидаемому (8760). Проверьте формат данных.");
-            return;
-        }
-
-        // Сохраняем данные в текстовый файл
-        fileWriterService.saveDataToFile("output.txt", ghiList, t2mList, optimalSlope);
-
-        // Устанавливаем маркер на земном шаре
-        double lat = Double.parseDouble(latitude);
-        double lon = Double.parseDouble(longitude);
-        globeView.setMarker(lat, lon);
-
-        // Выводим данные Оптимального угла наклона, G(i) и T2m в консоль для проверки
-        System.out.println("Оптимальный угол наклона (Slope): " + optimalSlope);
-        System.out.println("Данные G(i): " + ghiList);
-        System.out.println("Данные T2m: " + t2mList);
+        return sum;
     }
 
     /**

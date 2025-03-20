@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Application extends javafx.application.Application {
     @Override
@@ -16,6 +17,9 @@ public class Application extends javafx.application.Application {
 
         // Включаем возможность переключения в полноэкранный режим
         stage.setFullScreen(true);
+
+        // Подключаем CSS
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/example/fem/styles.css")).toExternalForm());
 
         // Обработчик событий для переключения между полноэкранным и оконным режимами
         scene.setOnKeyPressed(event -> {

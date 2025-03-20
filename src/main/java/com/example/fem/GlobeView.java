@@ -21,7 +21,7 @@ public class GlobeView {
 
     public GlobeView() {
         // Создаем земной шар
-        globe = new Sphere(150);
+        globe = new Sphere(160);
 
         // Загружаем текстуру
         PhongMaterial earthMaterial = new PhongMaterial();
