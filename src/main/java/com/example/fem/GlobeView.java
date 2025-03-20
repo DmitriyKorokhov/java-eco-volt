@@ -26,7 +26,8 @@ public class GlobeView {
         // Загружаем текстуру
         PhongMaterial earthMaterial = new PhongMaterial();
         try {
-            Image texture = new Image("file:world_map.jpg"); // Убедитесь, что путь к файлу правильный
+            // Убедитесь, что путь к файлу правильный
+            Image texture = new Image("file:C:\\Users\\defaultuser\\dev\\java-eco-volt\\src\\main\\resources\\com\\example\\fem\\images\\world_map.jpg");
             if (texture.isError()) {
                 throw texture.getException();
             }
