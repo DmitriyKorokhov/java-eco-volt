@@ -5,68 +5,92 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
-
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.fem.Controller">
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.fem.Controller">
 
-    <HBox alignment="CENTER" spacing="10" styleClass="logo-container">
-        <ImageView fx:id="logoImage" fitWidth="50" fitHeight="50">
-            <image>
-                <Image url="@images/logo.png"/> <!-- Путь к иконке -->
-            </image>
-        </ImageView>
-        <Label text="EcoVolt" styleClass="logo-text"/>
-    </HBox>
+    <!-- Верхняя часть интерфейса: логотип и название программы -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="logo-container">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <ImageView fx:id="logoImage" fitWidth="50" fitHeight="50">
+                <image>
+                    <Image url="@images/logo.png"/> <!-- Путь к иконке -->
+                </image>
+            </ImageView>
+            <Label text="EcoVolt" styleClass="logo-text"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+    </top>
 
-    <padding>
-        <Insets top="20" right="50" bottom="20" left="50"/>
-    </padding>
+    <!-- Центральная часть интерфейса: левая и правая части -->
+    <center>
+        <HBox alignment="CENTER" spacing="50.0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
-    <!-- Контейнер для земного шара -->
-    <AnchorPane fx:id="globeContainer" prefHeight="600" prefWidth="400"/>
+            <!-- Левая часть интерфейса: Геолокация -->
+            <VBox alignment="CENTER" spacing="10">
+                <!-- Заголовок "Геолокация" с рамкой
+                <HBox alignment="CENTER" styleClass="section-header" >
+                    <Label text="Геолокация"/>
+                </HBox>
+                -->
+                <!-- Контейнер для земного шара -->
+                <AnchorPane fx:id="globeContainer" prefHeight="600" prefWidth="700"/>
 
-    <!-- Поле для ввода широты -->
-    <Label text="Введите широту"/>
-    <HBox alignment="CENTER">
-        <TextField fx:id="latitudeField" promptText="Например, 45" prefWidth="200"/>
-    </HBox>
+                <!-- Поле для ввода широты -->
+                <Label text="Введите широту"/>
+                <HBox alignment="CENTER">
+                    <TextField fx:id="latitudeField" promptText="Например, 45" prefWidth="200"/>
+                </HBox>
 
-    <!-- Поле для ввода долготы -->
-    <Label text="Введите долготу"/>
-    <HBox alignment="CENTER">
-        <TextField fx:id="longitudeField" promptText="Например, 41" prefWidth="200"/>
-    </HBox>
+                <!-- Поле для ввода долготы -->
+                <Label text="Введите долготу"/>
+                <HBox alignment="CENTER">
+                    <TextField fx:id="longitudeField" promptText="Например, 41" prefWidth="200"/>
+                </HBox>
 
-    <!-- Кнопка для получения данных -->
-    <Button text="Получить данные" onAction="#onGetDataButtonClick"/>
+                <!-- Кнопка для получения данных -->
+                <Button text="Получить данные" onAction="#onGetDataButtonClick"/>
+            </VBox>
 
-    <!-- Контейнер для гистограммы и текстовых значений -->
-    <HBox spacing="20" alignment="CENTER">
-        <!-- Контейнер для гистограммы -->
-        <AnchorPane fx:id="histogramContainer" styleClass="chart-container" prefHeight="400" prefWidth="600">
-            <!-- Гистограмма будет добавлена сюда -->
-        </AnchorPane>
+            <!-- Правая часть интерфейса: Системная информация -->
+            <VBox alignment="CENTER" spacing="10">
+                <!-- Заголовок "Системная информация" с рамкой -->
+                <HBox alignment="CENTER" styleClass="section-header">
+                    <Label text="Системная информация"/>
+                </HBox>
 
-        <!-- Контейнер для текстовых значений -->
-        <VBox alignment="CENTER" spacing="10">
-            <!-- Контейнер для оптимального угла -->
-            <HBox spacing="20" styleClass="optimal-slope-container">
-                <Label text="Оптимальный угол наклона для фотоэлектрического модуля, градусы:"/>
-                <Label fx:id="optimalSlopeLabel" text="N/A"/>
-            </HBox>
+                <!-- Контейнер для гистограммы -->
+                <AnchorPane fx:id="histogramContainer" styleClass="chart-container" prefHeight="400" prefWidth="600">
+                    <!-- Гистограмма будет добавлена сюда -->
+                </AnchorPane>
 
-            <!-- Контейнер для среднего значения GHI -->
-            <HBox spacing="20" styleClass="average-ghi-container">
-                <Label text="Среднее многолетний приход суммарного солнечного излучения, кВт/кв.м:"/>
-                <Label fx:id="averageGhiLabel" text="N/A"/>
-            </HBox>
-        </VBox>
-    </HBox>
-</VBox>
+                <!-- Контейнер для текстовых значений -->
+                <VBox alignment="CENTER" spacing="10">
+                    <!-- Контейнер для оптимального угла -->
+                    <HBox spacing="20" styleClass="optimal-slope-container">
+                        <Label text="Оптимальный угол наклона для фотоэлектрического модуля, градусы:"/>
+                        <Label fx:id="optimalSlopeLabel" text="N/A"/>
+                    </HBox>
+
+                    <!-- Контейнер для среднего значения GHI -->
+                    <HBox spacing="20" styleClass="average-ghi-container">
+                        <Label text="Среднее многолетний приход суммарного солнечного излучения, кВт/кв.м:"/>
+                        <Label fx:id="averageGhiLabel" text="N/A"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

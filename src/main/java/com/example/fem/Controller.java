@@ -65,8 +65,8 @@ public class Controller {
         globeContainer.getChildren().add(globeSubScene);
 
         // Инициализация гистограммы
-        histogramView = new HistogramView(); // Передаем контейнер
-        histogramContainer.getChildren().add(histogramView.getBarChart()); // Добавляем гистограмму в контейнер
+        histogramView = new HistogramView();
+        histogramContainer.getChildren().add(histogramView.getBarChart());
     }
 
     /**
